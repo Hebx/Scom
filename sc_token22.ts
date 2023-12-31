@@ -33,7 +33,7 @@ async function main(){
     const ourMetadata = { // TODO change those values!
         name: "Scom Coin", 
         symbol: "SCOM",
-        uri: "https://raw.githubusercontent.com/Hebx/Scom/main/metadataUpdate/metadata.json",
+        uri: "https://raw.githubusercontent.com/Hebx/Scom/main/metadata.json",
     }
     if(INITIALIZE){
         const onChainData = {
