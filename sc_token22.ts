@@ -1,5 +1,5 @@
 
-import { createV1, updateV1 ,Collection, CreateMetadataAccountV3InstructionAccounts, CreateMetadataAccountV3InstructionDataArgs, Creator, MPL_TOKEN_METADATA_PROGRAM_ID, UpdateMetadataAccountV2InstructionAccounts, UpdateMetadataAccountV2InstructionData, Uses, createMetadataAccountV3, updateMetadataAccountV2, findMetadataPda, CreateV1InstructionAccounts, CreateV1InstructionData, TokenStandard, CollectionDetails, PrintSupply, UpdateV1InstructionData, UpdateV1InstructionAccounts, Data} from "@metaplex-foundation/mpl-token-metadata";
+import { createV1, updateV1 ,Collection, CreateMetadataAccountV3InstructionAccounts, CreateMetadataAccountV3InstructionDataArgs, Creator, MPL_TOKEN_METADATA_PROGRAM_ID, UpdateMetadataAccountV2InstructionAccounts, UpdateMetadataAccountV2InstructionData, Uses, createMetadataAccountV3, updateMetadataAccountV2, findMetadataPda, CreateV1InstructionAccounts, CreateV1InstructionData, TokenStandard, CollectionDetails, PrintSupply, UpdateV1InstructionData, UpdateV1InstructionAccounts, Data, printSupply} from "@metaplex-foundation/mpl-token-metadata";
 import * as web3 from "@solana/web3.js";
 import { PublicKey, createSignerFromKeypair, none, percentAmount, publicKey, signerIdentity, some } from "@metaplex-foundation/umi";
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults';
@@ -22,9 +22,9 @@ export function loadWalletKey(keypairFile:string): web3.Keypair {
 const INITIALIZE = true;
 
 async function main(){
-    console.log("let's name some token-22 tokens in 2024!");
-    const myKeypair = loadWalletKey("AndyUCWqhEnEMqHAByoRSHz2mvQxdyXyki9UQ7YCrTBY.json");
-    const mint = new web3.PublicKey("SC2pE5RANXhA9vrpY4eyKsEBjyaHCZ725q6hpo1CSR5");
+    console.log("Scom Coin token-22 Init");
+    const myKeypair = loadWalletKey("HebJzEetvddrxDXWAjEr542tWXD494bsTxWRf2x8aVUh.json"); // TO CHANGE
+    const mint = new web3.PublicKey("SCM1xJgXeJRYQMVUMyNF7zavNXZ34WEyGViY5ZxFAYj"); // TO CHANGE
 
     const umi = createUmi("https://api.devnet.solana.com");
     const signer = createSignerFromKeypair(umi, fromWeb3JsKeypair(myKeypair))
@@ -32,14 +32,13 @@ async function main(){
 
     const ourMetadata = { // TODO change those values!
         name: "Scom Coin", 
-        symbol: "SCOM",
+        symbol: "SCM",
         uri: "https://raw.githubusercontent.com/Hebx/Scom/main/metadata.json",
     }
     if(INITIALIZE){
         const onChainData = {
             ...ourMetadata,
-            // we don't need that
-            sellerFeeBasisPoints: percentAmount(0,2),
+            sellerFeeBasisPoints: percentAmount(4,2),
             creators: none<Creator[]>(),
             collection: none<Collection>(),
             uses: none<Uses>(),
@@ -58,7 +57,7 @@ async function main(){
             createV1Discriminator: 0,
             primarySaleHappened: true,
             decimals: none<number>(),
-            printSupply: none<PrintSupply>(),
+            printSupply: some({ __kind: "Limited", fields: [BigInt(10000000000)] }), // Set printSupply to 10 billion
         }
         const txid = await createV1(umi, {...accounts, ...data}).sendAndConfirm(umi);
         console.log(bs58.encode(txid.signature))
